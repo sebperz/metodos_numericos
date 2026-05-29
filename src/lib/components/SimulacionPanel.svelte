@@ -19,6 +19,7 @@
   let editorContainer = $state<HTMLDivElement>()
   let editorView: EditorView | null = null
   let output = $state('')
+  let plots = $state<string[]>([])
   let ejecutando = $state(false)
   let cargandoPlot = $state(false)
   let plotError = $state('')
@@ -28,7 +29,7 @@
     return metodo.codigo
   }
 
-  async function cargarPlot() {
+  async function cargarMatplotlib() {
     if (!runner.loaded || runner.matplotlibCargado) return
     cargandoPlot = true
     plotError = ''
@@ -45,8 +46,10 @@
     if (!runner.loaded) return
     ejecutando = true
     try {
-      if (!runner.matplotlibCargado) await cargarPlot()
-      output = await runner.run(getCode())
+      if (!runner.matplotlibCargado) await cargarMatplotlib()
+      const result = await runner.run(getCode())
+      output = result.output
+      plots = result.plots
     } finally {
       ejecutando = false
     }
@@ -63,7 +66,7 @@
   })
 
   $effect(() => {
-    if (runner.loaded && !runner.matplotlibCargado) cargarPlot()
+    if (runner.loaded && !runner.matplotlibCargado) cargarMatplotlib()
   })
 </script>
 
@@ -92,6 +95,8 @@
       <pre class="bg-muted border rounded-lg p-3 font-mono text-sm whitespace-pre-wrap max-h-[300px] overflow-y-auto">{output}</pre>
     {/if}
 
-    <canvas id="pyodide-plot-canvas" class="w-full border rounded-lg"></canvas>
+    {#each plots as plot (plot.slice(0, 20))}
+      <img src="data:image/png;base64,{plot}" alt="Grafico" class="w-full border rounded-lg" />
+    {/each}
   </div>
 {/if}

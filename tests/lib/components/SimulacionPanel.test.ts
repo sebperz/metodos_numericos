@@ -25,7 +25,7 @@ function createMockRunner(): PyodideRunner {
     matplotlibCargado: true,
     load: vi.fn().mockResolvedValue(undefined),
     loadMatplotlib: vi.fn().mockResolvedValue(undefined),
-    run: vi.fn().mockResolvedValue('Raiz encontrada: 2.0'),
+    run: vi.fn().mockResolvedValue({ output: 'Raiz encontrada: 2.0', plots: [] }),
   }
 }
 
@@ -65,9 +65,17 @@ describe('SimulacionPanel', () => {
     expect(screen.getByText(/cargando/i)).toBeInTheDocument()
   })
 
-  it('tiene un canvas para graficos', () => {
+  it('muestra plots como imagenes cuando hay graficos', async () => {
     const runner = createMockRunner()
+    runner.run = vi.fn().mockResolvedValue({
+      output: 'Resultado',
+      plots: ['iVBORw0KGgo='],
+    })
     render(SimulacionPanel, { runner, metodo })
-    expect(document.querySelector('canvas')).toBeInTheDocument()
+
+    const button = screen.getByRole('button', { name: /ejecutar/i })
+    await fireEvent.click(button)
+
+    expect(await screen.findByRole('img')).toBeInTheDocument()
   })
 })

@@ -11,8 +11,8 @@ function createMockRunner(): PyodideRunner {
     loadMatplotlib: vi.fn(async () => { _matplotlib = true }),
     run: vi.fn(async (code: string) => {
       if (!_loaded) throw new Error('Pyodide no esta cargado.')
-      if (code.includes('error')) return 'NameError: name x is not defined'
-      return code
+      if (code.includes('error')) return { output: 'NameError: name x is not defined', plots: [] }
+      return { output: code, plots: [] }
     }),
   }
 }
@@ -34,5 +34,13 @@ describe('PyodideRunner', () => {
     await runner.load()
     await runner.loadMatplotlib()
     expect(runner.matplotlibCargado).toBe(true)
+  })
+
+  it('run devuelve output y plots', async () => {
+    const runner = createMockRunner()
+    await runner.load()
+    const result = await runner.run('print("hola")')
+    expect(result.output).toBe('print("hola")')
+    expect(result.plots).toEqual([])
   })
 })
