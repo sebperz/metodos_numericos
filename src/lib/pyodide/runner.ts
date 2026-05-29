@@ -77,7 +77,7 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import warnings
-warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
+warnings.filterwarnings('ignore', message='.*non-interactive.*')
 plt.rcParams['figure.figsize'] = (8, 5)
 
 ${code}
