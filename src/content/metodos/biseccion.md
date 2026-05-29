@@ -9,7 +9,7 @@ descripcion: >
   el cambio de signo.
 parametros:
   funcion: "x**2 - 4"
-  intervalo: [-10, 10]
+  intervalo: [0, 10]
   tolerancia: 0.0001
 ---
 
@@ -47,15 +47,14 @@ def biseccion(f, a, b, tol=1e-6):
     return (a + b) / 2
 
 f = lambda x: x**2 - 4
-raiz = biseccion(f, -10, 10, tol=1e-6)
+raiz = biseccion(f, 0, 10, tol=1e-6)
 print(f"Raiz encontrada: {raiz:.6f}")
 print(f"f(raiz) = {f(raiz):.2e}")
 
-x = np.linspace(-5, 5, 200)
+x = np.linspace(0, 10, 200)
 plt.plot(x, f(x), label='f(x) = x^2 - 4')
 plt.axhline(0, color='gray', linewidth=0.5)
 plt.axvline(raiz, color='red', linestyle='--', label=f'Raiz: {raiz:.4f}')
-plt.axvline(-raiz, color='red', linestyle='--', label=f'Raiz: {-raiz:.4f}')
 plt.legend()
 plt.grid(True)
 plt.show()
