@@ -76,6 +76,8 @@ export function createPyodideRunner(): PyodideRunner {
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 plt.rcParams['figure.figsize'] = (8, 5)
 
 ${code}
