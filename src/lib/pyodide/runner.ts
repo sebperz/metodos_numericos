@@ -15,7 +15,7 @@ export function createPyodideRunner(): PyodideRunner {
 
   const preamble = `
 import matplotlib
-matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")
+matplotlib.use("module://matplotlib.backends.backend_html")
 matplotlib.rcParams["figure.figsize"] = (8, 5)
 `
 
